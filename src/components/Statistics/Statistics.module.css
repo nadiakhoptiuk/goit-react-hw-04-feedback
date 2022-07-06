@@ -1,0 +1,16 @@
+.statItem {
+  display: flex;
+  justify-content: flex-start;
+  font-size: 18px;
+  text-align: center;
+}
+
+.statItem:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.reportType,
+.total,
+.positive {
+  margin-right: 20px;
+}
