@@ -1,65 +1,78 @@
-import React, { Component } from 'react';
-
+import { useState } from 'react';
+import { useEffect } from 'react';
 import Section from './Section';
 import FeedbackButtons from './FeedbackButtons';
 import Statistics from './Statistics';
 import Notification from './Notification';
 
-export default class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+export default function App() {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [positivePercentage, setPositivePercentage] = useState(0);
+
+  const handleIncrease = ({ target: { name } }) => {
+    switch (name) {
+      case 'good':
+        setGood(prevState => prevState + 1);
+        break;
+
+      case 'neutral':
+        setNeutral(prevState => prevState + 1);
+        break;
+
+      case 'bad':
+        setBad(prevState => prevState + 1);
+        break;
+
+      default:
+        return;
+    }
   };
 
-  increase = type => {
-    this.setState(prevState => ({
-      [type]: prevState[type] + 1,
-    }));
-  };
+  const typesObj = { good: good, neutral: neutral, bad: bad };
+  const typesVal = Object.values(typesObj);
+  const typesArr = Object.entries(typesObj);
 
-  countTotalFeedback = () => {
-    const countsArr = Object.values(this.state);
+  useEffect(() => {
+    const countTotalFeedback = array => {
+      return array.reduce((prevVal, currVal) => {
+        return prevVal + currVal;
+      });
+    };
 
-    return countsArr.reduce((prevVal, currVal) => {
-      return prevVal + currVal;
-    });
-  };
+    console.log('hello');
 
-  countPositiveFeedbackPercentage = () => {
-    return Math.round((this.state.good / this.countTotalFeedback()) * 100);
-  };
+    const nextTotalCount = countTotalFeedback(typesVal);
+    setTotalCount(nextTotalCount);
 
-  render() {
-    const types = Object.keys(this.state);
-    const {
-      state,
-      increase,
-      countTotalFeedback,
-      countPositiveFeedbackPercentage,
-    } = this;
-    const totalCount = countTotalFeedback();
-    const positivePercentage = countPositiveFeedbackPercentage();
+    const countPositiveFeedbackPercentage = () => {
+      Math.round((good / totalCount) * 100);
+    };
 
-    return (
-      <>
-        <Section title="Please leave feedback">
-          <FeedbackButtons btnTypes={types} onIncrease={increase} />
-        </Section>
+    const nextPositivePercentage = countPositiveFeedbackPercentage();
+    setPositivePercentage(nextPositivePercentage);
+  }, [good, neutral, bad]);
 
-        <Section title="Statistics">
-          {!totalCount ? (
-            <Notification message="There is no feedback" />
-          ) : (
-            <Statistics
-              reportTypes={types}
-              state={state}
-              onTotalCount={totalCount}
-              onPositivePercentage={positivePercentage}
-            />
-          )}
-        </Section>
-      </>
-    );
-  }
+  return (
+    <>
+      <Section title="Please leave feedback">
+        <FeedbackButtons btnTypes={typesArr} onIncrease={handleIncrease} />
+      </Section>
+
+      <Section title="Statistics">
+        {!totalCount ? (
+          <Notification message="There is no feedback" />
+        ) : (
+          <Statistics
+            reportTypes={typesArr}
+            totalCount={totalCount}
+            goodValue={good}
+            positivePercentage={positivePercentage}
+          />
+        )}
+      </Section>
+    </>
+  );
 }
