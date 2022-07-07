@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import s from './FeedbackButtons.module.css';
 
 export default function FeedbackButtons({ btnTypes, onIncrease }) {
@@ -22,7 +22,14 @@ export default function FeedbackButtons({ btnTypes, onIncrease }) {
   );
 }
 
-// FeedbackButtons.propTypes = {
-//   btnTypes: PropTypes.shape(PropTypes.string.isRequired),
-//   onIncrease: PropTypes.func.isRequired,
-// };
+FeedbackButtons.propTypes = {
+  btnTypes: PropTypes.arrayOf(
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.string.isRequired,
+        PropTypes.number.isRequired,
+      ])
+    )
+  ),
+  onIncrease: PropTypes.func.isRequired,
+};

@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import s from './Statistics.module.css';
 
 export default function Statistics({
@@ -34,13 +34,16 @@ export default function Statistics({
   );
 }
 
-// Statistics.propTypes = {
-//   reportTypes: PropTypes.arrayOf(PropTypes.string.isRequired),
-//   state: PropTypes.shape({
-//     good: PropTypes.number.isRequired,
-//     neutral: PropTypes.number.isRequired,
-//     bad: PropTypes.number.isRequired,
-//   }),
-//   onTotalCount: PropTypes.number.isRequired,
-//   onPositivePercentage: PropTypes.number.isRequired,
-// };
+Statistics.propTypes = {
+  reportTypes: PropTypes.arrayOf(
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.string.isRequired,
+        PropTypes.number.isRequired,
+      ])
+    )
+  ),
+  totalCount: PropTypes.number.isRequired,
+  goodValue: PropTypes.number.isRequired,
+  positivePercentage: PropTypes.number.isRequired,
+};

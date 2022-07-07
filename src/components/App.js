@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState } from 'react';
 import Section from './Section';
 import FeedbackButtons from './FeedbackButtons';
 import Statistics from './Statistics';
@@ -8,8 +8,6 @@ export default function App() {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-  const [totalCount, setTotalCount] = useState(0);
-  const [positivePercentage, setPositivePercentage] = useState(0);
 
   const handleIncrease = ({ target: { name } }) => {
     switch (name) {
@@ -30,33 +28,21 @@ export default function App() {
     }
   };
 
-  const typesObj = useMemo(
-    () => ({ good: good, neutral: neutral, bad: bad }),
-    [good, bad, neutral]
-  );
+  const typesObj = { good: good, neutral: neutral, bad: bad };
   const typesArr = Object.entries(typesObj);
+  const typesVal = Object.values(typesObj);
 
-  useEffect(() => {
-    const countTotalFeedback = array => {
-      return array.reduce((prevVal, currVal) => {
-        return prevVal + currVal;
-      });
-    };
+  const countTotalFeedback = array => {
+    return array.reduce((prevVal, currVal) => {
+      return prevVal + currVal;
+    });
+  };
+  const totalCount = countTotalFeedback(typesVal);
 
-    const typesVal = Object.values(typesObj);
-    const nextTotalCount = countTotalFeedback(typesVal);
-    setTotalCount(nextTotalCount);
-
-    const countPositiveFeedbackPercentage = () => {
-      return Math.round((good / totalCount) * 100);
-    };
-
-    if (good) {
-      const nextPositivePercentage = countPositiveFeedbackPercentage();
-
-      setPositivePercentage(nextPositivePercentage);
-    }
-  }, [good, totalCount, typesObj]);
+  const countPositiveFeedbackPercentage = () => {
+    return Math.round((good / totalCount) * 100);
+  };
+  const positivePercentage = countPositiveFeedbackPercentage();
 
   return (
     <>
