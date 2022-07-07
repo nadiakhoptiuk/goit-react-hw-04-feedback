@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Section from './Section';
 import FeedbackButtons from './FeedbackButtons';
 import Statistics from './Statistics';
@@ -31,7 +30,10 @@ export default function App() {
     }
   };
 
-  const typesObj = { good: good, neutral: neutral, bad: bad };
+  const typesObj = useMemo(
+    () => ({ good: good, neutral: neutral, bad: bad }),
+    [good, bad, neutral]
+  );
   const typesArr = Object.entries(typesObj);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export default function App() {
 
       setPositivePercentage(nextPositivePercentage);
     }
-  }, [good, neutral, bad, totalCount, typesObj]);
+  }, [good, totalCount, typesObj]);
 
   return (
     <>
