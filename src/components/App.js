@@ -32,7 +32,6 @@ export default function App() {
   };
 
   const typesObj = { good: good, neutral: neutral, bad: bad };
-  const typesVal = Object.values(typesObj);
   const typesArr = Object.entries(typesObj);
 
   useEffect(() => {
@@ -42,18 +41,20 @@ export default function App() {
       });
     };
 
-    console.log('hello');
-
+    const typesVal = Object.values(typesObj);
     const nextTotalCount = countTotalFeedback(typesVal);
     setTotalCount(nextTotalCount);
 
     const countPositiveFeedbackPercentage = () => {
-      Math.round((good / totalCount) * 100);
+      return Math.round((good / totalCount) * 100);
     };
 
-    const nextPositivePercentage = countPositiveFeedbackPercentage();
-    setPositivePercentage(nextPositivePercentage);
-  }, [good, neutral, bad]);
+    if (good) {
+      const nextPositivePercentage = countPositiveFeedbackPercentage();
+
+      setPositivePercentage(nextPositivePercentage);
+    }
+  }, [good, neutral, bad, totalCount]);
 
   return (
     <>
