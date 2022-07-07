@@ -54,7 +54,7 @@ export default function App() {
 
       setPositivePercentage(nextPositivePercentage);
     }
-  }, [good, neutral, bad, totalCount]);
+  }, [good, neutral, bad, totalCount, typesObj]);
 
   return (
     <>
